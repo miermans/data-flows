@@ -14,20 +14,5 @@ s3_download = S3Download()
 with Flow("s3download_flow") as flow:
     s3download_result = s3_download(key=s3_bucket_key, bucket=s3_bucket_source, as_bytes=True)
 
-#flow.run()
-
-# TODO: In production, the steps below would be taken by a deployment script. They're just included here as an example.
-flow.storage = prefect.storage.S3(
-    bucket='pocket-dataflows-storage-dev',
-    add_default_labels=False
-)
-
-flow.run_config = ECSRun(
-    # task_definition_path="test.yaml",
-    labels=['Dev'],
-    task_role_arn=environ.get('PREFECT_TASK_ROLE_ARN'),
-    # execution_role_arn='arn:aws:iam::12345678:role/prefect-ecs',
-    image='prefecthq/prefect:latest-python3.9',
-)
-
-flow.register(project_name="prefect-tutorial")
+if __name__ == "__main__":
+    flow.run()
