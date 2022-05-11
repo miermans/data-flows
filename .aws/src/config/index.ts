@@ -1,16 +1,16 @@
 const name = 'DataFlows';
 const domainPrefix = 'data-flows';
-const s3BucketPrefix = 'pocket';
+const s3BucketPrefix = 'miermans';
 const isDev = process.env.NODE_ENV === 'development';
 const environment = isDev ? 'Dev' : 'Prod';
 const fullEnvironment = isDev ? 'development' : 'production';
 const domain = isDev
-  ? `${domainPrefix}.getpocket.dev`
-  : `${domainPrefix}.readitlater.com`;
+  ? `${domainPrefix}.miermans.help`
+  : `${domainPrefix}.miermans.link`;
 const graphqlVariant = isDev ? 'development' : 'current';
 const githubConnectionArn = isDev
-  ? 'arn:aws:codestar-connections:us-east-1:410318598490:connection/7426c139-1aa0-49e2-aabc-5aef11092032'
-  : 'arn:aws:codestar-connections:us-east-1:996905175585:connection/5fa5aa2b-a2d2-43e3-ab5a-72ececfc1870';
+  ? 'arn:aws:codestar-connections:us-west-2:324770945281:connection/12027ec3-0c55-4146-a8e9-e12cca40ade0'
+  : 'arn:aws:codestar-connections:us-west-2:324770945281:connection/12027ec3-0c55-4146-a8e9-e12cca40ade0';
 const branch = isDev ? 'dev' : 'main';
 
 // Git branch name is used to determine which Prefect project to register the tasks in: dev or prod.
@@ -30,19 +30,11 @@ const prefect = {
     cpu: 4096, // 4096 = 4 vCPU
     memory: 30720, // 30720 = 30GB
     dataLearningBucketName: isDev
-      ? 'pocket-data-learning-dev'
-      : 'pocket-data-learning',
+      ? 'transport-tracker'
+      : 'transport-tracker',
     // To securely inject an environment variable FOO_BAR in the ECS task that executes Prefect Flows, add 'FOO_BAR' to
     // the list below and create Parameters /DataFlows/Prod/FOO_BAR and /DataFlows/Dev/FOO_BAR in Prod and Dev.
     parameterStoreNames: [
-      'SNOWFLAKE_PRIVATE_KEY',
-      'SNOWFLAKE_ACCOUNT',
-      'SNOWFLAKE_USER',
-      'DBT_CLOUD_TOKEN',
-      'DBT_CLOUD_ACCOUNT_ID',
-      'GCE_KEY',
-      'BRAZE_API_KEY',
-      'BRAZE_REST_ENDPOINT',
     ],
     // Use the existing 'PocketDataProductReadOnly' policy. It currently only exists in production.
     // @see https://github.com/Pocket/data-shared/blob/main/lib/permissions-stack.ts#L14
@@ -54,7 +46,7 @@ export const config = {
   name,
   isDev,
   prefix: `${name}-${environment}`,
-  awsRegion: 'us-east-1',
+  awsRegion: 'us-west-2',
   s3BucketPrefix,
   circleCIPrefix: `/${name}/CircleCI/${environment}`,
   shortName: 'DATAFL',
@@ -63,14 +55,14 @@ export const config = {
   domain,
   prefect,
   terraform: {
-    organization: 'Pocket',
+    organization: 'mmiermans',
   },
   codePipeline: {
     artifactBucketPrefix: `${s3BucketPrefix}-codepipeline`,
     githubConnectionArn,
-    repository: 'pocket/data-flows',
+    repository: 'miermans/data-flows',
     branch,
-    codeDeploySnsTopicName: `DataAndLearning-${environment}-ChatBot`,
+    codeDeploySnsTopicName: `Deployment-${environment}-ChatBot`,
   },
   graphqlVariant,
   healthCheck: {
